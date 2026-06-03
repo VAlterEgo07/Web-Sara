@@ -32,7 +32,7 @@ async function verificarEstadoGlobal() {
                     .insert([{
                         id: session.user.id,
                         tier_actual: 'ninguno',
-                        "estado_subscripción": 'inactiva',
+                        "estado_suscripcion": 'inactiva',
                         "nombre _completo": nombreMeta
                     }])
                     .select()
@@ -55,7 +55,7 @@ async function verificarEstadoGlobal() {
                             ✦ Hola, ${nombreMostrar} ▾
                         </button>
                         <div id="dropdown-menu" class="dropdown-content">
-                            <a href="perfil.html">Mi Perfil</a>
+                            <a href="profile.html">Mi Perfil</a>
                             <a href="shop.html">Ir a la Tienda</a>
                             <a href="sub.html">Club Secreto</a>
                             <hr class="dropdown-divider">
@@ -87,7 +87,7 @@ async function verificarEstadoGlobal() {
 
         } else {
             // Si no hay sesión y está en zona protegida, expulsar
-            if (rutaActual.includes('perfil.html') || rutaActual.includes('sub.html')) {
+            if (rutaActual.includes('profile.html') || rutaActual.includes('sub.html')) {
                 window.location.href = 'auth.html';
             }
         }
