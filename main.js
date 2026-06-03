@@ -33,7 +33,7 @@ async function verificarEstadoGlobal() {
                         id: session.user.id,
                         tier_actual: 'ninguno',
                         "estado_suscripcion": 'inactiva',
-                        "nombre _completo": nombreMeta
+                        "nombre_completo": nombreMeta
                     }])
                     .select()
                     .single();
@@ -46,7 +46,7 @@ async function verificarEstadoGlobal() {
             }
 
             // 3. Mostrar el nombre en la Navbar
-            let nombreMostrar = perfil?.["nombre _completo"] || session.user.email.split('@')[0];
+            let nombreMostrar = perfil?.["nombre_completo"] || session.user.email.split('@')[0];
 
             if (authContainer) {
                 authContainer.innerHTML = `
