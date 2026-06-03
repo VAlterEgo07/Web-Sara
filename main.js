@@ -32,12 +32,13 @@ async function verificarEstadoGlobal() {
                     .insert([{
                         id: session.user.id,
                         tier_actual: 'ninguno',
-                        "estado_suscripcion": 'inactiva',
-                        "nombre_completo": nombreMeta
+                        estado_suscripcion: 'inactiva',
+                        nombre_completo: nombreMeta,
+                        fecha_inicio: null,      // <--- Listo para rellenar al comprar
+                        fecha_expiracion: null   // <--- Listo para rellenar al comprar
                     }])
                     .select()
                     .single();
-
                 if (insertError) {
                     console.error("Error crítico al crear perfil desde JS:", insertError.message);
                 } else {
