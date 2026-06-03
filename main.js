@@ -1,5 +1,5 @@
 // --- main.js ---
-// Usamos el cliente globalDb de tu config.js
+// Usamos el cliente globalDb configurado en tu archivo config.js
 
 async function verificarEstadoGlobal() {
     globalDb.auth.onAuthStateChange(async (event, session) => {
@@ -7,22 +7,26 @@ async function verificarEstadoGlobal() {
         const rutaActual = window.location.pathname;
 
         if (session) {
-            // Si está conectado y está en el login, lo mandamos a la portada
+            // Si el usuario ya está conectado e intenta entrar a la página de login, lo redirigimos a la portada
             if (rutaActual.includes('auth.html')) {
                 window.location.href = 'index.html';
                 return;
             }
 
-            // 1. Intentar buscar el perfil del usuario
+            // 1. Intentar buscar el perfil del usuario en la tabla limpia
             let { data: perfil, error } = await globalDb
                 .from('perfiles')
                 .select('*')
                 .eq('id', session.user.id)
                 .maybeSingle();
 
-            // 2. BYPASS: Si el perfil no existe, lo creamos directamente desde JavaScript
+            if (error) {
+                console.error("Error al consultar el perfil:", error.message);
+            }
+
+            // 2. BYPASS: Si el perfil no existe en la tabla, lo creamos automáticamente desde JavaScript
             if (!perfil) {
-                // Extraer el nombre de los metadatos de Google o del registro
+                // Extraer el nombre de los metadatos de Google o de su registro por email
                 const nombreMeta = session.user.user_metadata?.full_name || 
                                    session.user.user_metadata?.name || 
                                    session.user.email.split('@')[0];
@@ -34,20 +38,23 @@ async function verificarEstadoGlobal() {
                         tier_actual: 'ninguno',
                         estado_suscripcion: 'inactiva',
                         nombre_completo: nombreMeta,
-                        fecha_inicio: null,      // <--- Listo para rellenar al comprar
-                        fecha_expiracion: null   // <--- Listo para rellenar al comprar
+                        correo: session.user.email, // Guarda automáticamente el email del usuario
+                        direccion_postal: null,     // Se rellenará más adelante en el perfil o compra
+                        fecha_inicio: null,         // Se activará al realizar el pago mensual
+                        fecha_expiracion: null      // Se activará al realizar el pago mensual
                     }])
                     .select()
                     .single();
+
                 if (insertError) {
                     console.error("Error crítico al crear perfil desde JS:", insertError.message);
                 } else {
-                    perfil = nuevoPerfil; // Perfil creado con éxito
+                    perfil = nuevoPerfil; // Perfil creado con éxito, lo asignamos para usar sus datos
                 }
             }
 
-            // 3. Mostrar el nombre en la Navbar
-            let nombreMostrar = perfil?.["nombre_completo"] || session.user.email.split('@')[0];
+            // 3. Renderizar y mostrar el nombre del usuario en la Navbar
+            let nombreMostrar = perfil?.nombre_completo || session.user.email.split('@')[0];
 
             if (authContainer) {
                 authContainer.innerHTML = `
@@ -65,7 +72,7 @@ async function verificarEstadoGlobal() {
                     </div>
                 `;
 
-                // Control del menú desplegable
+                // Lógica para abrir y cerrar el menú desplegable del perfil
                 const trigger = document.getElementById('profile-trigger');
                 const menu = document.getElementById('dropdown-menu');
 
@@ -78,7 +85,7 @@ async function verificarEstadoGlobal() {
                     menu.classList.remove('show');
                 });
 
-                // Cierre de sesión
+                // Manejo del cierre de sesión (Sign Out)
                 document.getElementById('btn-logout').addEventListener('click', async (e) => {
                     e.preventDefault();
                     await globalDb.auth.signOut();
@@ -87,7 +94,7 @@ async function verificarEstadoGlobal() {
             }
 
         } else {
-            // Si no hay sesión y está en zona protegida, expulsar
+            // Si no hay ninguna sesión activa y el usuario intenta entrar a zonas protegidas, lo expulsamos al login
             if (rutaActual.includes('profile.html') || rutaActual.includes('sub.html')) {
                 window.location.href = 'auth.html';
             }
@@ -95,4 +102,5 @@ async function verificarEstadoGlobal() {
     });
 }
 
+// Inicializar la verificación cuando todo el HTML de la página esté completamente cargado
 document.addEventListener('DOMContentLoaded', verificarEstadoGlobal);
