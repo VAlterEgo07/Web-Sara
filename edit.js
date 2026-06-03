@@ -1,4 +1,4 @@
-// --- perfil.js ---
+// --- edit.js ---
 async function cargarDatosPerfil() {
     const { data: { session } } = await globalDb.auth.getSession();
     

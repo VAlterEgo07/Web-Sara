@@ -1,6 +1,6 @@
 // --- auth.js ---
 // ¡IMPORTANTE! Ya NO inicializamos Supabase aquí. 
-// Asumimos que 'supabaseClient' ya existe gracias al archivo 'config.js'.
+// Asumimos que 'globalDb' ya existe gracias al archivo 'config.js'.
 
 // Capturar elementos del DOM
 const authForm = document.getElementById('auth-form');
@@ -56,7 +56,7 @@ authForm.addEventListener('submit', async (e) => {
         // Recoger el nombre si el input existe, si no, enviar en blanco
         const nombre = nombreInput ? nombreInput.value : '';
         
-        const { error } = await supabaseClient.auth.signUp({ 
+        const { error } = await globalDb.auth.signUp({ 
             email: email, 
             password: password,
             options: {
@@ -75,7 +75,7 @@ authForm.addEventListener('submit', async (e) => {
         }
     } else {
         // Inicio de sesión normal
-        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        const { error } = await globalDb.auth.signInWithPassword({ email, password });
         if (error) {
             alert('Error: Correo o contraseña incorrectos.');
         } else {
@@ -88,7 +88,7 @@ authForm.addEventListener('submit', async (e) => {
 
 // Botón de Google OAuth
 btnGoogle.addEventListener('click', async () => {
-    const { error } = await supabaseClient.auth.signInWithOAuth({
+    const { error } = await globalDb.auth.signInWithOAuth({
         provider: 'google',
         options: {
             // URL a la que volver tras loguearse (Debe coincidir con la de Google Cloud)
