@@ -1,29 +1,53 @@
 // --- main.js ---
-// Ya no inicializamos Supabase aquí, usamos el "supabaseClient" creado en config.js
+// Usamos el cliente globalDb de tu config.js
 
-function verificarEstadoGlobal() {
-    // Escucha en tiempo real cualquier cambio de sesión (Login, Logout, Carga inicial o redirección de Google)
-    supabaseClient.auth.onAuthStateChange(async (event, session) => {
+async function verificarEstadoGlobal() {
+    globalDb.auth.onAuthStateChange(async (event, session) => {
         const authContainer = document.getElementById('auth-container');
         const rutaActual = window.location.pathname;
 
         if (session) {
-            // Si el usuario ya está conectado y está intentando ver la pantalla de login, lo mandamos al inicio
+            // Si está conectado y está en el login, lo mandamos a la portada
             if (rutaActual.includes('auth.html')) {
                 window.location.href = 'index.html';
                 return;
             }
 
-            // Consultar el nombre en la tabla perfiles
-            const { data: perfil } = await supabaseClient
+            // 1. Intentar buscar el perfil del usuario
+            let { data: perfil, error } = await globalDb
                 .from('perfiles')
-                .select('nombre_completo')
+                .select('*')
                 .eq('id', session.user.id)
-                .single();
+                .maybeSingle();
 
-            let nombreMostrar = perfil?.nombre_completo || session.user.email.split('@')[0];
+            // 2. BYPASS: Si el perfil no existe, lo creamos directamente desde JavaScript
+            if (!perfil) {
+                // Extraer el nombre de los metadatos de Google o del registro
+                const nombreMeta = session.user.user_metadata?.full_name || 
+                                   session.user.user_metadata?.name || 
+                                   session.user.email.split('@')[0];
 
-            // Inyectar el menú desplegable en la barra de navegación
+                const { data: nuevoPerfil, error: insertError } = await globalDb
+                    .from('perfiles')
+                    .insert([{
+                        id: session.user.id,
+                        tier_actual: 'ninguno',
+                        "estado_subscripción": 'inactiva',
+                        "nombre _completo": nombreMeta
+                    }])
+                    .select()
+                    .single();
+
+                if (insertError) {
+                    console.error("Error crítico al crear perfil desde JS:", insertError.message);
+                } else {
+                    perfil = nuevoPerfil; // Perfil creado con éxito
+                }
+            }
+
+            // 3. Mostrar el nombre en la Navbar
+            let nombreMostrar = perfil?.["nombre _completo"] || session.user.email.split('@')[0];
+
             if (authContainer) {
                 authContainer.innerHTML = `
                     <div class="profile-dropdown-container">
@@ -40,7 +64,7 @@ function verificarEstadoGlobal() {
                     </div>
                 `;
 
-                // Lógica de apertura del menú desplegable
+                // Control del menú desplegable
                 const trigger = document.getElementById('profile-trigger');
                 const menu = document.getElementById('dropdown-menu');
 
@@ -53,16 +77,16 @@ function verificarEstadoGlobal() {
                     menu.classList.remove('show');
                 });
 
-                // Lógica de salida de la cuenta
+                // Cierre de sesión
                 document.getElementById('btn-logout').addEventListener('click', async (e) => {
                     e.preventDefault();
-                    await supabaseClient.auth.signOut();
+                    await globalDb.auth.signOut();
                     window.location.href = 'index.html';
                 });
             }
 
         } else {
-            // Si NO hay sesión y el usuario intenta forzar la entrada a las zonas privadas, lo expulsamos a auth
+            // Si no hay sesión y está en zona protegida, expulsar
             if (rutaActual.includes('perfil.html') || rutaActual.includes('sub.html')) {
                 window.location.href = 'auth.html';
             }
