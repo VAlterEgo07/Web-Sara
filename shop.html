@@ -17,7 +17,8 @@
                 <li><a href="tienda.html" class="active">Tienda</a></li>
                 <li><a href="club.html">Club Secreto</a></li>
             </ul>
-            <div class="auth-buttons">
+            <!-- ¡AQUÍ ESTÁ LA CORRECCIÓN! Le hemos añadido el id="auth-container" -->
+            <div id="auth-container" class="auth-buttons">
                 <a href="auth.html" class="btn-primary">Mi Cuenta</a>
             </div>
         </div>
@@ -57,5 +58,10 @@
     <footer>
         <p>&copy; 2026 Darling Dols. Creado con amor.</p>
     </footer>
+    
+    <!-- Scripts en el orden correcto -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
