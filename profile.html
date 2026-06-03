@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Rincón Mágico | Darling Dols</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">Darling Dols</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="tienda.html">Tienda</a></li>
+                <li><a href="club.html">Club Secreto</a></li>
+            </ul>
+            <div id="auth-container" class="auth-buttons"></div>
+        </div>
+    </nav>
+
+    <main class="page-container" style="max-width: 800px; margin-top: 120px;">
+        <header class="page-header" style="text-align: left;">
+            <h1>Mi Perfil</h1>
+            <p>Gestiona tu información, integraciones y suscripciones.</p>
+        </header>
+
+        <div style="display: grid; gap: 32px;">
+            
+            <!-- Bloque: Editar Perfil -->
+            <div class="club-post">
+                <h3>Información Personal</h3>
+                <form id="form-perfil" style="margin-top: 20px;" onsubmit="event.preventDefault();">
+                    <div class="form-group">
+                        <label for="perfil-nombre">Nombre de visualización</label>
+                        <input type="text" id="perfil-nombre" placeholder="¿Cómo quieres que te llamemos?">
+                    </div>
+                    <div class="form-group">
+                        <label>Correo electrónico (No editable)</label>
+                        <input type="email" id="perfil-email" disabled style="background: #f3f4f6;">
+                    </div>
+                    <button type="submit" id="btn-guardar-perfil" class="btn-primary">Guardar Cambios</button>
+                </form>
+            </div>
+
+            <!-- Bloque: Suscripción y Tiers -->
+            <div class="club-post" style="border-left: 4px solid var(--color-pastel-pink-dark);">
+                <h3>Mi Suscripción</h3>
+                <div style="margin-top: 16px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <p style="font-size: 1.1rem; font-weight: 600;">Tier Actual: <span id="perfil-tier" style="color: var(--color-pastel-pink-dark); text-transform: uppercase;">Cargando...</span></p>
+                        <p id="perfil-estado" class="post-date">Estado: Verificando...</p>
+                    </div>
+                    <a href="index.html#suscripciones" class="btn-outline" style="border-color: #d1d5db; color: #374151;">Mejorar Plan</a>
+                </div>
+            </div>
+
+            <!-- Bloque: Integraciones -->
+            <div class="club-post">
+                <h3>Integraciones</h3>
+                <p style="margin-bottom: 16px; color: var(--color-text-muted);">Cuentas vinculadas a Darling Dols</p>
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <img src="https://www.google.com/favicon.ico" alt="Google" style="width: 24px;">
+                        <span style="font-weight: 600;">Google</span>
+                    </div>
+                    <span id="badge-google" class="tier-tag">No conectado</span>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="main.js"></script>
+    <script src="perfil.js"></script>
+</body>
+</html>

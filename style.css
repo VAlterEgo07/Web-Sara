@@ -720,3 +720,85 @@ footer {
         font-size: 2rem;
     }
 }
+
+/* =========================================
+   ESTILOS PARA EL MENÚ DESPLEGABLE DEL PERFIL
+   ========================================= */
+.profile-dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+.btn-profile {
+    background-color: var(--color-pastel-pink);
+    color: #4c0519;
+    padding: 10px 22px;
+    border-radius: 99px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-profile:hover {
+    background-color: var(--color-pastel-pink-dark);
+    color: #ffffff;
+}
+
+/* Contenedor del menú oculto por defecto */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: var(--color-surface);
+    min-width: 180px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    border: 1px solid #f3f4f6;
+    padding: 8px 0;
+    margin-top: 8px;
+    z-index: 1100;
+    text-align: left;
+}
+
+/* Clase activa manejada con JavaScript */
+.dropdown-content.show {
+    display: block;
+}
+
+.dropdown-content a {
+    color: var(--color-text-main);
+    padding: 10px 16px;
+    text-decoration: none;
+    display: block;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-content a:hover {
+    background-color: var(--color-bg);
+    color: var(--color-pastel-pink-dark);
+}
+
+/* Línea divisoria dentro del menú */
+.dropdown-divider {
+    border: 0;
+    height: 1px;
+    background: #e5e7eb;
+    margin: 6px 0;
+}
+
+/* Estilo para el botón de salir */
+.dropdown-content a.logout-link {
+    color: #ef4444;
+}
+
+.dropdown-content a.logout-link:hover {
+    background-color: #fef2f2;
+    color: #b91c1c;
+}

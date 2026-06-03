@@ -1,9 +1,6 @@
 // --- auth.js ---
-const SUPABASE_URL = 'https://asohirfqptahznnbvrxn.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFzb2hpcmZxcHRhaHpubmJ2cnhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0ODQ0ODEsImV4cCI6MjA5NjA2MDQ4MX0.GOymweYwuKDOkHIB9UnTIkMwdiCqPWBGe2xbDefzpWg';
-
-// Inicializar cliente
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// ¡IMPORTANTE! Ya NO inicializamos Supabase aquí. 
+// Asumimos que 'supabaseClient' ya existe gracias al archivo 'config.js'.
 
 // Capturar elementos del DOM
 const authForm = document.getElementById('auth-form');
@@ -13,6 +10,10 @@ const btnSubmit = document.getElementById('btn-submit-auth');
 const btnGoogle = document.getElementById('btn-google-auth');
 const authTitle = document.getElementById('auth-title');
 const toggleText = document.getElementById('toggle-text');
+
+// Intentamos capturar los campos del nombre (por si usas el HTML actualizado)
+const groupNombre = document.getElementById('group-nombre');
+const nombreInput = document.getElementById('nombre');
 
 let authMode = 'login'; // Estado inicial
 
@@ -25,13 +26,21 @@ function setupToggle() {
             authTitle.innerText = 'Crear una cuenta';
             btnSubmit.innerText = 'Registrarse';
             toggleText.innerHTML = '¿Ya tienes cuenta? <a href="#" id="auth-toggle-link">Inicia sesión aquí</a>';
+            
+            // Mostrar el campo de nombre si existe en el HTML
+            if (groupNombre) groupNombre.style.display = 'block';
+            if (nombreInput) nombreInput.setAttribute('required', 'required');
         } else {
             authMode = 'login';
             authTitle.innerText = 'Comenzar tu aventura';
             btnSubmit.innerText = 'Ingresar';
             toggleText.innerHTML = '¿No tienes cuenta? <a href="#" id="auth-toggle-link">Regístrate aquí</a>';
+            
+            // Ocultar el campo de nombre
+            if (groupNombre) groupNombre.style.display = 'none';
+            if (nombreInput) nombreInput.removeAttribute('required');
         }
-        setupToggle(); // Volver a vincular el evento al nuevo enlace
+        setupToggle(); // Volver a vincular el evento al nuevo enlace generado
     });
 }
 setupToggle();
@@ -44,16 +53,35 @@ authForm.addEventListener('submit', async (e) => {
     btnSubmit.innerText = 'Cargando...';
 
     if (authMode === 'signup') {
-        const { error } = await supabaseClient.auth.signUp({ email, password });
-        if (error) alert('Error: ' + error.message);
-        else {
+        // Recoger el nombre si el input existe, si no, enviar en blanco
+        const nombre = nombreInput ? nombreInput.value : '';
+        
+        const { error } = await supabaseClient.auth.signUp({ 
+            email: email, 
+            password: password,
+            options: {
+                data: {
+                    full_name: nombre // Esto se guarda en Supabase para el perfil
+                }
+            }
+        });
+        
+        if (error) {
+            alert('Error: ' + error.message);
+        } else {
             alert('¡Registro exitoso! Ya puedes iniciar sesión.');
-            window.location.href = 'index.html';
+            // Forzar la vista a login o redirigir a inicio directamente
+            window.location.href = 'index.html'; 
         }
     } else {
+        // Inicio de sesión normal
         const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-        if (error) alert('Error: Correo o contraseña incorrectos.');
-        else window.location.href = 'index.html'; // Redirige a la tienda al entrar
+        if (error) {
+            alert('Error: Correo o contraseña incorrectos.');
+        } else {
+            // Si el login es correcto, 'main.js' detectará el cambio y hará el resto
+            window.location.href = 'index.html'; 
+        }
     }
     btnSubmit.innerText = authMode === 'signup' ? 'Registrarse' : 'Ingresar';
 });
@@ -63,7 +91,7 @@ btnGoogle.addEventListener('click', async () => {
     const { error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            // URL a la que volver tras loguearse (Ajusta esto en producción por tu dominio de Netlify)
+            // URL a la que volver tras loguearse (Debe coincidir con la de Google Cloud)
             redirectTo: window.location.origin + '/index.html'
         }
     });

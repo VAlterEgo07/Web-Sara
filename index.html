@@ -8,7 +8,6 @@
 </head>
 <body>
 
-    <!-- Barra de Navegación -->
     <nav class="navbar">
         <div class="nav-container">
             <a href="index.html" class="logo">Darling Dolls</a>
@@ -18,19 +17,17 @@
                 <li><a href="shop.html">Tienda</a></li>
                 <li><a href="sub.html">Club Secreto</a></li>
             </ul>
-            <div class="auth-buttons">
-                <!-- Enlace a la página de login/registro -->
+            <div id="auth-container" class="auth-buttons">
                 <a href="auth.html" class="btn-primary">Mi Cuenta</a>
             </div>
         </div>
     </nav>
 
-    <!-- Portada / Hero -->
     <header id="inicio" class="hero">
         <div class="hero-content">
             <span class="hero-tagline">Arte & Coleccionables</span>
             <h1>Un mundo lleno de muñecas</h1>
-            <p>Únete a nuestra comunidad mensual para recibir regalos y piezas exclusivas, o explora nuestra colección de amigurumis en la tienda.</p>
+            <p>Únete a nuestra comunidad mensual para recibir regalos y piezas exclusivas, o explore nuestra colección de amigurumis en la tienda.</p>
             <div class="hero-actions">
                 <a href="#suscripciones" class="btn-primary">Ver Planes del Club</a>
                 <a href="shop.html" class="btn-outline">Explorar Tienda</a>
@@ -38,13 +35,11 @@
         </div>
     </header>
 
-    <!-- Sección de Suscripciones (2 Tiers) -->
     <section id="suscripciones" class="section-container bg-pastel">
         <h2 class="section-title">Planes del Club</h2>
         <p class="section-subtitle">Elige tu nivel de magia y obtén recompensas mensuales exclusivas</p>
         
         <div id="tiers-container" class="grid-tiers">
-            <!-- Tier 1 -->
             <div class="card-tier">
                 <div class="tier-badge">Creativo</div>
                 <h3>Tier Perlita</h3>
@@ -58,7 +53,6 @@
                 <a href="auth.html" class="btn-tier-buy" style="display: block; text-align: center; text-decoration: none; padding: 12px;">Suscribirse</a>
             </div>
 
-            <!-- Tier 2 -->
             <div class="card-tier tier-premium">
                 <div class="tier-badge premium">Coleccionista</div>
                 <h3>Tier Diamante</h3>
@@ -74,12 +68,10 @@
         </div>
     </section>
 
-    <!-- Sección de Novedades (Mini-Tienda) -->
     <section id="novedades" class="section-container">
         <h2 class="section-title">Recién salidos de la aguja</h2>
         <p class="section-subtitle">Descubre nuestras últimas creaciones</p>
         
-        <!-- Muestra estática que luego conectaremos a Supabase -->
         <div class="grid-productos">
             <div class="tarjeta-producto">
                 <div class="img-container">
@@ -117,10 +109,11 @@
         </div>
     </section>
 
-    <!-- Pie de página -->
     <footer>
-        <p>&copy; 2026 Darling Dols. Creado con amor.</p>
+        <p>&copy; 2026 Darling Dolls. Creado con amor.</p>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="main.js"></script>
 </body>
 </html>
