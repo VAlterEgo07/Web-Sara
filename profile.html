@@ -23,15 +23,13 @@
     <main class="page-container" style="max-width: 800px; margin-top: 120px; padding: 0 20px; margin-bottom: 60px;">
         <header class="page-header" style="text-align: left; margin-bottom: 32px;">
             <h1>Mi Perfil</h1>
-            <p>Gestiona tu información de envío, datos personales y estado de tu suscripción premium.</p>
+            <p>Gestiona tu información de envío, datos personales y estado de tu membresía.</p>
         </header>
 
-        <!-- Contenedor para alertas flotantes de éxito/error de JS -->
         <div id="perfil-alerta" style="display: none; padding: 16px; border-radius: 8px; margin-bottom: 24px; font-weight: 500;"></div>
 
         <div style="display: grid; gap: 32px;">
             
-            <!-- Bloque: Información Personal -->
             <div class="club-post">
                 <h3 style="display: flex; align-items: center; gap: 8px;">✨ Información Personal</h3>
                 <form id="form-perfil" style="margin-top: 20px;">
@@ -47,7 +45,6 @@
                 </form>
             </div>
 
-            <!-- Bloque NUEVO: Dirección Postal para Envíos -->
             <div class="club-post">
                 <h3 style="display: flex; align-items: center; gap: 8px;">📦 Dirección de Envío</h3>
                 <p style="margin-bottom: 16px; color: var(--color-text-muted); font-size: 0.95rem;">
@@ -62,7 +59,6 @@
                 </form>
             </div>
 
-            <!-- Bloque ACTUALIZADO: Suscripción con control de fechas -->
             <div class="club-post" style="border-left: 4px solid var(--color-pastel-pink-dark);">
                 <h3 style="display: flex; align-items: center; gap: 8px;">👑 Mi Suscripción</h3>
                 <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 16px;">
@@ -73,11 +69,16 @@
                             </p>
                             <p id="perfil-estado" class="post-date" style="font-size: 0.95rem;">Estado: Verificando...</p>
                         </div>
-                        <a href="index.html#suscripciones" class="btn-outline" style="border-color: #d1d5db; color: #374151; padding: 8px 16px;">Mejorar Plan</a>
+                        <span style="border: 1px solid #d1d5db; background: #f9fafb; color: #6b7280; padding: 8px 16px; border-radius: 6px; font-size: 0.9rem; font-weight: 500; cursor: not-allowed;">
+                            Disponible más adelante ✨
+                        </span>
                     </div>
+
+                    <p style="font-size: 0.9rem; color: #4b5563; margin-top: -4px; font-style: italic;">
+                        Estamos preparando los últimos detalles del Club Secreto. ¡Las membresías mágicas se abrirán muy pronto!
+                    </p>
                     
-                    <!-- Sub-bloque visual para vigencia de membresía (mensual) -->
-                    <div id="fechas-suscripcion-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; padding: 12px; background: #fafafa; border-radius: 6px; border: 1px dashed #e5e7eb;">
+                    <div id="fechas-suscripcion-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; padding: 12px; background: #fafafa; border-radius: 6px; border: 1px dashed #e5e7eb; opacity: 0.7;">
                         <div>
                             <span style="font-size: 0.85rem; color: var(--color-text-muted); display: block;">Fecha de Adquisición</span>
                             <strong id="perfil-fecha-inicio" style="font-size: 0.95rem;">-- / -- / ----</strong>
@@ -90,7 +91,6 @@
                 </div>
             </div>
 
-            <!-- Bloque: Integraciones -->
             <div class="club-post">
                 <h3>Integraciones</h3>
                 <p style="margin-bottom: 16px; color: var(--color-text-muted);">Cuentas vinculadas a Darling Dols</p>
@@ -106,10 +106,9 @@
         </div>
     </main>
 
-    <!-- Scripts de Control -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
     <script src="main.js"></script>
-    <script src="edit.js"></script> <!-- Aquí programaremos la lógica de guardado -->
+    <script src="edit.js"></script>
 </body>
 </html>
