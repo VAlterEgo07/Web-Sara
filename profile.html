@@ -20,39 +20,73 @@
         </div>
     </nav>
 
-    <main class="page-container" style="max-width: 800px; margin-top: 120px;">
-        <header class="page-header" style="text-align: left;">
+    <main class="page-container" style="max-width: 800px; margin-top: 120px; padding: 0 20px; margin-bottom: 60px;">
+        <header class="page-header" style="text-align: left; margin-bottom: 32px;">
             <h1>Mi Perfil</h1>
-            <p>Gestiona tu información, integraciones y suscripciones.</p>
+            <p>Gestiona tu información de envío, datos personales y estado de tu suscripción premium.</p>
         </header>
+
+        <!-- Contenedor para alertas flotantes de éxito/error de JS -->
+        <div id="perfil-alerta" style="display: none; padding: 16px; border-radius: 8px; margin-bottom: 24px; font-weight: 500;"></div>
 
         <div style="display: grid; gap: 32px;">
             
-            <!-- Bloque: Editar Perfil -->
+            <!-- Bloque: Información Personal -->
             <div class="club-post">
-                <h3>Información Personal</h3>
-                <form id="form-perfil" style="margin-top: 20px;" onsubmit="event.preventDefault();">
+                <h3 style="display: flex; align-items: center; gap: 8px;">✨ Información Personal</h3>
+                <form id="form-perfil" style="margin-top: 20px;">
                     <div class="form-group">
                         <label for="perfil-nombre">Nombre de visualización</label>
                         <input type="text" id="perfil-nombre" placeholder="¿Cómo quieres que te llamemos?">
                     </div>
                     <div class="form-group">
                         <label>Correo electrónico (No editable)</label>
-                        <input type="email" id="perfil-email" disabled style="background: #f3f4f6;">
+                        <input type="email" id="perfil-email" disabled style="background: #f3f4f6; cursor: not-allowed;">
                     </div>
                     <button type="submit" id="btn-guardar-perfil" class="btn-primary">Guardar Cambios</button>
                 </form>
             </div>
 
-            <!-- Bloque: Suscripción y Tiers -->
-            <div class="club-post" style="border-left: 4px solid var(--color-pastel-pink-dark);">
-                <h3>Mi Suscripción</h3>
-                <div style="margin-top: 16px; display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <p style="font-size: 1.1rem; font-weight: 600;">Tier Actual: <span id="perfil-tier" style="color: var(--color-pastel-pink-dark); text-transform: uppercase;">Cargando...</span></p>
-                        <p id="perfil-estado" class="post-date">Estado: Verificando...</p>
+            <!-- Bloque NUEVO: Dirección Postal para Envíos -->
+            <div class="club-post">
+                <h3 style="display: flex; align-items: center; gap: 8px;">📦 Dirección de Envío</h3>
+                <p style="margin-bottom: 16px; color: var(--color-text-muted); font-size: 0.95rem;">
+                    Mantén tus datos actualizados para recibir tus Darling Dols físicas sin contratiempos.
+                </p>
+                <form id="form-direccion">
+                    <div class="form-group">
+                        <label for="perfil-direccion">Calle, Número, Piso/Puerta</label>
+                        <input type="text" id="perfil-direccion" placeholder="Ej: Calle de la Magia, Nº 7, 2ºB">
                     </div>
-                    <a href="index.html#suscripciones" class="btn-outline" style="border-color: #d1d5db; color: #374151;">Mejorar Plan</a>
+                    <button type="submit" id="btn-guardar-direccion" class="btn-primary">Actualizar Dirección</button>
+                </form>
+            </div>
+
+            <!-- Bloque ACTUALIZADO: Suscripción con control de fechas -->
+            <div class="club-post" style="border-left: 4px solid var(--color-pastel-pink-dark);">
+                <h3 style="display: flex; align-items: center; gap: 8px;">👑 Mi Suscripción</h3>
+                <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+                        <div>
+                            <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 4px;">
+                                Tier Actual: <span id="perfil-tier" style="color: var(--color-pastel-pink-dark); text-transform: uppercase;">Cargando...</span>
+                            </p>
+                            <p id="perfil-estado" class="post-date" style="font-size: 0.95rem;">Estado: Verificando...</p>
+                        </div>
+                        <a href="index.html#suscripciones" class="btn-outline" style="border-color: #d1d5db; color: #374151; padding: 8px 16px;">Mejorar Plan</a>
+                    </div>
+                    
+                    <!-- Sub-bloque visual para vigencia de membresía (mensual) -->
+                    <div id="fechas-suscripcion-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; padding: 12px; background: #fafafa; border-radius: 6px; border: 1px dashed #e5e7eb;">
+                        <div>
+                            <span style="font-size: 0.85rem; color: var(--color-text-muted); display: block;">Fecha de Adquisición</span>
+                            <strong id="perfil-fecha-inicio" style="font-size: 0.95rem;">-- / -- / ----</strong>
+                        </div>
+                        <div>
+                            <span style="font-size: 0.85rem; color: var(--color-text-muted); display: block;">Próxima Renovación / Expiración</span>
+                            <strong id="perfil-fecha-expiracion" style="font-size: 0.95rem;">-- / -- / ----</strong>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -72,8 +106,10 @@
         </div>
     </main>
 
+    <!-- Scripts de Control -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
     <script src="main.js"></script>
-    <script src="edit.js"></script>
+    <script src="edit.js"></script> <!-- Aquí programaremos la lógica de guardado -->
 </body>
 </html>
