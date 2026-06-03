@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Secreto | Darling Dols</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">Darling Dols</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="index.html#suscripciones">Suscripciones</a></li>
+                <li><a href="tienda.html">Tienda</a></li>
+                <li><a href="club.html" class="active">Club Secreto</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <span id="user-badge" class="user-info-text">Hola, Miembro ✦</span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="page-container">
+        <header class="page-header">
+            <h1>El Club Secreto</h1>
+            <p>Tu rincón exclusivo con contenido, descargas y novedades de tus tiers.</p>
+        </header>
+
+        <div id="club-feed" class="feed-container">
+            
+            <article class="club-post">
+                <div class="post-meta">
+                    <span class="tier-tag pink">Tier Diamante</span>
+                    <span class="post-date">Publicado hoy</span>
+                </div>
+                <h2>Votación: Elige el diseño del próximo mes</h2>
+                <p>¡Hola a todos! Aquí os dejo los tres bocetos base para la caja coleccionable de este mes de junio. Dejad vuestro voto en los comentarios...</p>
+                <div class="post-interactive-box">[Espacio para votaciones/descargas]</div>
+            </article>
+
+            <article class="club-post locked">
+                <div class="post-lock-overlay">
+                    <div class="lock-message">
+                        <span>🔒</span>
+                        <h3>Contenido Protegido</h3>
+                        <p>Este post es exclusivo para miembros del <strong>Tier Diamante</strong>.</p>
+                        <a href="index.html#suscripciones" class="btn-primary">Mejorar Plan</a>
+                    </div>
+                </div>
+                <div class="blur-content">
+                    <div class="post-meta"><span class="tier-tag">Tier Diamante</span></div>
+                    <h2>Descarga exclusiva: Patrón avanzado imprimible</h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Si estás viendo esto es porque tienes acceso de prueba...</p>
+                </div>
+            </article>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Darling Dols. Creado con amor.</p>
+    </footer>
+</body>
+</html>

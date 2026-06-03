@@ -3,44 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inkwell Studios - Tienda Oficial</title>
+    <title>Darling Dolls | Un mundo lleno de muñecas</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <!-- Barra de Navegación -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="#" class="logo">Inkwell Studios</a>
+            <a href="index.html" class="logo">Darling Dolls</a>
             <ul class="nav-links">
-                <li><a href="#inicio">Inicio</a></li>
-                <li><a href="#tienda">Tienda</a></li>
-                <li><a href="#contacto">Contacto</a></li>
+                <li><a href="index.html" class="active">Inicio</a></li>
+                <li><a href="#suscripciones">Suscripciones</a></li>
+                <li><a href="shop.html">Tienda</a></li>
+                <li><a href="sub.html">Club Secreto</a></li>
             </ul>
+            <div class="auth-buttons">
+                <!-- Enlace a la página de login/registro -->
+                <a href="auth.html" class="btn-primary">Mi Cuenta</a>
+            </div>
         </div>
     </nav>
 
+    <!-- Portada / Hero -->
     <header id="inicio" class="hero">
         <div class="hero-content">
-            <h1>Bienvenidos a Inkwell Studios</h1>
-            <p>Explora nuestras últimas creaciones, merchandising exclusivo y proyectos independientes.</p>
-            <a href="#tienda" class="btn-primary">Ver Catálogo</a>
+            <span class="hero-tagline">Arte & Coleccionables</span>
+            <h1>Un mundo lleno de muñecas</h1>
+            <p>Únete a nuestra comunidad mensual para recibir regalos y piezas exclusivas, o explora nuestra colección de amigurumis en la tienda.</p>
+            <div class="hero-actions">
+                <a href="#suscripciones" class="btn-primary">Ver Planes del Club</a>
+                <a href="shop.html" class="btn-outline">Explorar Tienda</a>
+            </div>
         </div>
     </header>
 
-    <main id="tienda" class="store-section">
-        <h2 class="section-title">Nuestros Productos</h2>
+    <!-- Sección de Suscripciones (2 Tiers) -->
+    <section id="suscripciones" class="section-container bg-pastel">
+        <h2 class="section-title">Planes del Club</h2>
+        <p class="section-subtitle">Elige tu nivel de magia y obtén recompensas mensuales exclusivas</p>
         
-        <div id="catalogo" class="grid-productos">
-            
-            <div class="tarjeta-producto">
-                <div class="img-placeholder"></div>
-                <h3>Producto de Muestra</h3>
-                <p class="precio">0.00 €</p>
-                <button class="btn-buy">Añadir al carrito</button>
+        <div id="tiers-container" class="grid-tiers">
+            <!-- Tier 1 -->
+            <div class="card-tier">
+                <div class="tier-badge">Creativo</div>
+                <h3>Tier Perlita</h3>
+                <div class="price">9.99 €<span>/mes</span></div>
+                <ul class="tier-features">
+                    <li>Acceso al feed exclusivo del Club Secreto</li>
+                    <li>1 Patrón en PDF nuevo cada mes</li>
+                    <li>Descuento del 10% en toda la tienda</li>
+                    <li>Vota en las encuestas de próximos diseños</li>
+                </ul>
+                <a href="auth.html" class="btn-tier-buy" style="display: block; text-align: center; text-decoration: none; padding: 12px;">Suscribirse</a>
             </div>
 
+            <!-- Tier 2 -->
+            <div class="card-tier tier-premium">
+                <div class="tier-badge premium">Coleccionista</div>
+                <h3>Tier Diamante</h3>
+                <div class="price">24.99 €<span>/mes</span></div>
+                <ul class="tier-features">
+                    <li>Todas las ventajas del Tier Perlita</li>
+                    <li>Una figura amigurumi física sorpresa cada mes</li>
+                    <li>Acceso anticipado a colecciones limitadas</li>
+                    <li>Envío gratuito garantizado en la tienda</li>
+                </ul>
+                <a href="auth.html" class="btn-tier-buy premium" style="display: block; text-align: center; text-decoration: none; padding: 12px;">Suscribirse</a>
+            </div>
         </div>
-    </main>
+    </section>
+
+    <!-- Sección de Novedades (Mini-Tienda) -->
+    <section id="novedades" class="section-container">
+        <h2 class="section-title">Recién salidos de la aguja</h2>
+        <p class="section-subtitle">Descubre nuestras últimas creaciones</p>
+        
+        <!-- Muestra estática que luego conectaremos a Supabase -->
+        <div class="grid-productos">
+            <div class="tarjeta-producto">
+                <div class="img-container">
+                    <div class="img-placeholder"></div>
+                </div>
+                <span class="category-tag">Muñecas</span>
+                <h3>Hada de Fresa</h3>
+                <p class="precio">35.00 €</p>
+                <button class="btn-buy">Ver detalles</button>
+            </div>
+            
+            <div class="tarjeta-producto">
+                <div class="img-container">
+                    <div class="img-placeholder"></div>
+                </div>
+                <span class="category-tag">Patrones PDF</span>
+                <h3>Colección Criaturas del Bosque</h3>
+                <p class="precio">12.50 €</p>
+                <button class="btn-buy">Ver detalles</button>
+            </div>
+
+            <div class="tarjeta-producto">
+                <div class="img-container">
+                    <div class="img-placeholder"></div>
+                </div>
+                <span class="category-tag">Accesorios</span>
+                <h3>Bolso Estrella Pastel</h3>
+                <p class="precio">22.00 €</p>
+                <button class="btn-buy">Ver detalles</button>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="shop.html" class="btn-secondary" style="border: 2px solid var(--color-pastel-pink-dark); color: var(--color-text-main);">Ver el catálogo completo ➔</a>
+        </div>
+    </section>
+
+    <!-- Pie de página -->
+    <footer>
+        <p>&copy; 2026 Darling Dols. Creado con amor.</p>
+    </footer>
 
 </body>
 </html>

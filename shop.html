@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Vitrina | Darling Dols Tienda</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">Darling Dols</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="index.html#suscripciones">Suscripciones</a></li>
+                <li><a href="tienda.html" class="active">Tienda</a></li>
+                <li><a href="club.html">Club Secreto</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <a href="auth.html" class="btn-primary">Mi Cuenta</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="page-container">
+        <header class="page-header">
+            <h1>La Vitrina</h1>
+            <p>Piezas mágicas coleccionables y patrones hechos con amor.</p>
+        </header>
+
+        <div class="filter-container">
+            <button class="btn-filter active">Todos</button>
+            <button class="btn-filter">Muñecas</button>
+            <button class="btn-filter">Patrones PDF</button>
+            <button class="btn-filter">Accesorios</button>
+        </div>
+
+        <div id="catalogo-completo" class="grid-productos">
+            <div class="tarjeta-producto">
+                <div class="img-container"><div class="img-placeholder"></div></div>
+                <span class="category-tag">Muñecas</span>
+                <h3>Muñeca Pastel Básica</h3>
+                <p class="precio">35.00 €</p>
+                <button class="btn-buy">Comprar ahora</button>
+            </div>
+            <div class="tarjeta-producto">
+                <div class="img-container"><div class="img-placeholder"></div></div>
+                <span class="category-tag">Patrones PDF</span>
+                <h3>Patrón Amigurumi Mágico</h3>
+                <p class="precio">5.50 €</p>
+                <button class="btn-buy">Comprar ahora</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Darling Dols. Creado con amor.</p>
+    </footer>
+</body>
+</html>
