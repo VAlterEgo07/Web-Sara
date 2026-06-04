@@ -938,3 +938,51 @@ footer {
         width: 100%;
     }
 }
+
+/* =========================================
+   TIENDA Y PRODUCTOS (GRID ACTUALIZADO)
+   ========================================= */
+.grid-productos {
+    display: grid;
+    /* Fuerza exactamente 4 columnas iguales en ordenador */
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px; /* Espacio limpio entre tarjetas */
+    width: 100%;
+}
+
+/* =========================================
+   ADAPTACIÓN RESPONSIVA (MEDIA QUERIES)
+   ========================================= */
+
+/* Para pantallas medianas (Portátiles pequeños o Tablets en horizontal) */
+@media (max-width: 1024px) {
+    .grid-productos {
+        /* Pasa a 3 columnas si la pantalla es más estrecha */
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+    }
+}
+
+/* Para Tablets en vertical */
+@media (max-width: 768px) {
+    .grid-productos {
+        /* Pasa a 2 columnas para que no se vea todo tan apretado */
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+}
+
+/* Para Teléfonos Móviles */
+@media (max-width: 480px) {
+    .grid-productos {
+        /* Fuerza exactamente 1 columna (un objeto por fila) */
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+        gap: 20px;
+    }
+    
+    /* Opcional: Hace que las tarjetas ocupen un espacio visual más cómodo en móvil */
+    .tarjeta-producto {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+}
