@@ -97,31 +97,79 @@ async function verificarEstadoGlobal() {
 /* =========================================================================
    2. DESCARGA Y RENDERIZADO DEL CATÁLOGO DE PRODUCTOS (LA VITRINA)
    ========================================================================= */
-/* =========================================================================
-   2. DESCARGA Y RENDERIZADO DEL CATÁLOGO DE PRODUCTOS (LA VITRINA)
-   ========================================================================= */
 async function cargarProductos() {
     const contenedorCatalogo = document.getElementById('catalogo-completo');
     if (!contenedorCatalogo) return;
 
-    console.log("🪄 Invocando objetos desde Supabase...");
-
-    // CAMBIO CLAVE: Usamos '*' para traer todas las columnas sin importar cómo se llamen
+    // CORRECCIÓN: Pedimos explícitamente 'imagen_url' para que coincida con tu base de datos
     const { data: productos, error } = await globalDb
         .from('productos')
-        .select('id, nombre, precio, categoria, imagen_url, creado_en, tamanos_disponibles, kofi_url')        
+        .select('id, nombre, precio, categoria, imagen_url, creado_en, tamanos_disponibles, kofi_url')
         .order('creado_en', { ascending: false }); 
 
     if (error) {
-        console.error("🚨 Error bloqueante de Supabase:", error);
+        console.error("Error al cargar productos:", error.message);
         contenedorCatalogo.innerHTML = `<p style="color: red; text-align: center; font-weight: 600; width: 100%;">Fallo en la base de datos: ${error.message}</p>`;
         return;
     }
 
-    console.log("📦 Datos recibidos con éxito:", productos);
     todosLosProductos = productos;
     renderizarProductos(todosLosProductos); 
     inicializarFiltros(); 
+}
+
+function renderizarProductos(productosMostrados) {
+    const contenedorCatalogo = document.getElementById('catalogo-completo');
+    if (!contenedorCatalogo) return;
+    contenedorCatalogo.innerHTML = ''; 
+
+    if (productosMostrados.length === 0) {
+        contenedorCatalogo.innerHTML = `<p style="text-align: center; width: 100%; color: var(--color-text-muted); margin-top: 20px;">No hay objetos mágicos en esta categoría aún.</p>`;
+        return;
+    }
+
+    productosMostrados.forEach(producto => {
+        // CORRECCIÓN: Usamos producto.imagen_url para mostrar la foto
+        const imagenDiv = producto.imagen_url 
+            ? `<img src="${producto.imagen_url}" alt="${producto.nombre}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">`
+            : `<div class="img-placeholder" style="width: 100%; padding-bottom: 100%; background: #e5e7eb; border-radius: 8px;"></div>`;
+
+        const precioFormateado = parseFloat(producto.precio).toFixed(2);
+
+        let selectorTamañoHTML = '';
+        if (producto.tamanos_disponibles) {
+            const listaTamanos = producto.tamanos_disponibles.split(',').map(t => t.trim());
+            const opcionesHTML = listaTamanos.map(tamano => `<option value="${tamano}">${tamano}</option>`).join('');
+
+            selectorTamañoHTML = `
+                <div class="selector-tamaño-container" style="margin: 12px 0 4px 0; text-align: left;">
+                    <label for="size-${producto.id}" style="font-size: 0.85rem; color: var(--color-text-muted); display: block; margin-bottom: 4px;">Opciones disponibles:</label>
+                    <select id="size-${producto.id}" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 8px; background-color: #fff; font-family: inherit; font-size: 0.9rem; color: var(--color-text-main); cursor: pointer;">
+                        ${opcionesHTML}
+                    </select>
+                </div>
+            `;
+        }
+
+        const tarjeta = document.createElement('div');
+        tarjeta.className = 'tarjeta-producto';
+        const tieneTamanos = producto.tamanos_disponibles ? 'true' : 'false';
+
+        tarjeta.innerHTML = `
+            <div class="img-container">${imagenDiv}</div>
+            <span class="category-tag">${producto.categoria}</span>
+            <h3>${producto.nombre}</h3>
+            
+            ${selectorTamañoHTML} 
+            <p class="precio">${precioFormateado} €</p>
+            
+            <button class="btn-buy" onclick="redirigirAKofi('${producto.kofi_url}', ${producto.id}, ${tieneTamanos})">
+                Comprar en Ko-fi ➔
+            </button>
+        `;
+
+        contenedorCatalogo.appendChild(tarjeta);
+    });
 }
 
 function renderizarProductos(productosMostrados) {
