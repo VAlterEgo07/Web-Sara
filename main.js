@@ -1,8 +1,3 @@
-// Referencias del DOM para la sección de la tienda
-const contenedorCatalogo = document.getElementById('catalogo-completo');
-const botonesFiltro = document.querySelectorAll('.btn-filter');
-let todosLosProductos = []; // Almacenamiento local de los productos descargados
-
 /* =========================================================================
    1. GESTIÓN DE AUTENTICACIÓN Y PERFILES (NAVBAR)
    ========================================================================= */
@@ -17,7 +12,6 @@ async function verificarEstadoGlobal() {
                 return;
             }
 
-            // 1. Buscar el perfil del usuario en la base de datos
             let { data: perfil, error } = await globalDb
                 .from('perfiles')
                 .select('*')
@@ -28,7 +22,6 @@ async function verificarEstadoGlobal() {
                 console.error("Error al consultar el perfil:", error.message);
             }
 
-            // 2. Si el perfil no existe en la tabla, crearlo automáticamente
             if (!perfil) {
                 const nombreMeta = session.user.user_metadata?.full_name || 
                                    session.user.user_metadata?.name || 
@@ -56,7 +49,6 @@ async function verificarEstadoGlobal() {
                 }
             }
 
-            // 3. Mostrar el menú dinámico del perfil en la Navbar
             let nombreMostrar = perfil?.nombre_completo || session.user.email.split('@')[0];
 
             if (authContainer) {
@@ -106,7 +98,8 @@ async function verificarEstadoGlobal() {
    2. DESCARGA Y RENDERIZADO DEL CATÁLOGO DE PRODUCTOS (LA VITRINA)
    ========================================================================= */
 async function cargarProductos() {
-    if (!contenedorCatalogo) return; // Salvaguarda: Solo actúa si estamos en la página de la tienda
+    const contenedorCatalogo = document.getElementById('catalogo-completo');
+    if (!contenedorCatalogo) return; // Si no estamos en la tienda, salimos sin romper nada
 
     const { data: productos, error } = await globalDb
         .from('productos')
@@ -121,14 +114,16 @@ async function cargarProductos() {
 
     todosLosProductos = productos;
     renderizarProductos(todosLosProductos); 
+    inicializarFiltros(); // Activamos los filtros dinámicamente
 }
 
 function renderizarProductos(productosMostrados) {
+    const contenedorCatalogo = document.getElementById('catalogo-completo');
     if (!contenedorCatalogo) return;
     contenedorCatalogo.innerHTML = ''; 
 
     if (productosMostrados.length === 0) {
-        contenedorCatalogo.innerHTML = `<p style="text-align: center; width: 100%; color: var(--color-text-muted);">No hay objetos mágicos en esta categoría aún.</p>`;
+        contenedorCatalogo.innerHTML = `<p style="text-align: center; width: 100%; color: var(--color-text-muted); margin-top: 20px;">No hay objetos mágicos en esta categoría aún.</p>`;
         return;
     }
 
@@ -139,7 +134,6 @@ function renderizarProductos(productosMostrados) {
 
         const precioFormateado = parseFloat(producto.precio).toFixed(2);
 
-        // Renderizado del selector de tamaños
         let selectorTamañoHTML = '';
         if (producto.tamanos_disponibles) {
             const listaTamanos = producto.tamanos_disponibles.split(',').map(t => t.trim());
@@ -176,11 +170,20 @@ function renderizarProductos(productosMostrados) {
     });
 }
 
-// Configurar los eventos de clic para los botones de filtrado
-if (botonesFiltro.length > 0) {
+// Nueva función aislada para arrancar los filtros de forma segura
+function inicializarFiltros() {
+    const botonesFiltro = document.querySelectorAll('.btn-filter');
+    if (botonesFiltro.length === 0) return;
+
     botonesFiltro.forEach(boton => {
-        boton.addEventListener('click', (e) => {
-            botonesFiltro.forEach(b => b.classList.remove('active'));
+        // Clonamos el nodo para limpiar cualquier listener viejo acumulado
+        const nuevoBoton = boton.cloneNode(true);
+        boton.parentNode.replaceChild(nuevoBoton, boton);
+
+        nuevoBoton.addEventListener('click', (e) => {
+            const botonesActuales = document.querySelectorAll('.btn-filter');
+            botonesActuales.forEach(b => b.classList.remove('active'));
+            
             const botonClicado = e.target;
             botonClicado.classList.add('active');
 
@@ -239,7 +242,7 @@ async function cargarMetaRecaudacion() {
 
             if (domTitle) domTitle.textContent = nombre;
             if (domCurrent) domCurrent.textContent = `Recaudado: ${parseFloat(recaudado).toFixed(2)} €`;
-            if (domTarget) domTarget.textContent = `Objetivo: ${parseFloat(objetivo).toFixed(2)} €`;
+            if (domTarget) domTarget.textContent = `Objetivo: ${parseFloat(objective).toFixed(2)} €`;
             if (domText) domText.textContent = `${porcentaje}% Completado`;
             
             setTimeout(() => {
