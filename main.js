@@ -1,19 +1,23 @@
-// --- main.js ---
-// Usamos el cliente globalDb configurado en tu archivo config.js
+// Referencias del DOM para la sección de la tienda
+const contenedorCatalogo = document.getElementById('catalogo-completo');
+const botonesFiltro = document.querySelectorAll('.btn-filter');
+let todosLosProductos = []; // Almacenamiento local de los productos descargados
 
+/* =========================================================================
+   1. GESTIÓN DE AUTENTICACIÓN Y PERFILES (NAVBAR)
+   ========================================================================= */
 async function verificarEstadoGlobal() {
     globalDb.auth.onAuthStateChange(async (event, session) => {
         const authContainer = document.getElementById('auth-container');
         const rutaActual = window.location.pathname;
 
         if (session) {
-            // Si el usuario ya está conectado e intenta entrar a la página de login, lo redirigimos a la portada
             if (rutaActual.includes('auth.html')) {
                 window.location.href = 'index.html';
                 return;
             }
 
-            // 1. Intentar buscar el perfil del usuario en la tabla limpia
+            // 1. Buscar el perfil del usuario en la base de datos
             let { data: perfil, error } = await globalDb
                 .from('perfiles')
                 .select('*')
@@ -24,9 +28,8 @@ async function verificarEstadoGlobal() {
                 console.error("Error al consultar el perfil:", error.message);
             }
 
-            // 2. BYPASS: Si el perfil no existe en la tabla, lo creamos automáticamente desde JavaScript
+            // 2. Si el perfil no existe en la tabla, crearlo automáticamente
             if (!perfil) {
-                // Extraer el nombre de los metadatos de Google o de su registro por email
                 const nombreMeta = session.user.user_metadata?.full_name || 
                                    session.user.user_metadata?.name || 
                                    session.user.email.split('@')[0];
@@ -38,10 +41,10 @@ async function verificarEstadoGlobal() {
                         tier_actual: 'ninguno',
                         estado_suscripcion: 'inactiva',
                         nombre_completo: nombreMeta,
-                        correo: session.user.email, // Guarda automáticamente el email del usuario
-                        direccion_postal: null,     // Se rellenará más adelante en el perfil o compra
-                        fecha_inicio: null,         // Se activará al realizar el pago mensual
-                        fecha_expiracion: null      // Se activará al realizar el pago mensual
+                        correo: session.user.email,
+                        direccion_postal: null,     
+                        fecha_inicio: null,         
+                        fecha_expiracion: null      
                     }])
                     .select()
                     .single();
@@ -49,11 +52,11 @@ async function verificarEstadoGlobal() {
                 if (insertError) {
                     console.error("Error crítico al crear perfil desde JS:", insertError.message);
                 } else {
-                    perfil = nuevoPerfil; // Perfil creado con éxito, lo asignamos para usar sus datos
+                    perfil = nuevoPerfil; 
                 }
             }
 
-            // 3. Renderizar y mostrar el nombre del usuario en la Navbar
+            // 3. Mostrar el menú dinámico del perfil en la Navbar
             let nombreMostrar = perfil?.nombre_completo || session.user.email.split('@')[0];
 
             if (authContainer) {
@@ -72,7 +75,6 @@ async function verificarEstadoGlobal() {
                     </div>
                 `;
 
-                // Lógica para abrir y cerrar el menú desplegable del perfil
                 const trigger = document.getElementById('profile-trigger');
                 const menu = document.getElementById('dropdown-menu');
 
@@ -82,10 +84,9 @@ async function verificarEstadoGlobal() {
                 });
 
                 document.addEventListener('click', () => {
-                    menu.classList.remove('show');
+                    if (menu) menu.classList.remove('show');
                 });
 
-                // Manejo del cierre de sesión (Sign Out)
                 document.getElementById('btn-logout').addEventListener('click', async (e) => {
                     e.preventDefault();
                     await globalDb.auth.signOut();
@@ -94,7 +95,6 @@ async function verificarEstadoGlobal() {
             }
 
         } else {
-            // Si no hay ninguna sesión activa y el usuario intenta entrar a zonas protegidas, lo expulsamos al login
             if (rutaActual.includes('profile.html') || rutaActual.includes('sub.html')) {
                 window.location.href = 'auth.html';
             }
@@ -102,12 +102,123 @@ async function verificarEstadoGlobal() {
     });
 }
 
-// Asegúrate de que el cliente de Supabase ya esté inicializado en tu archivo (usando tus llaves de config.js)
-// const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+/* =========================================================================
+   2. DESCARGA Y RENDERIZADO DEL CATÁLOGO DE PRODUCTOS (LA VITRINA)
+   ========================================================================= */
+async function cargarProductos() {
+    if (!contenedorCatalogo) return; // Salvaguarda: Solo actúa si estamos en la página de la tienda
 
+    const { data: productos, error } = await globalDb
+        .from('productos')
+        .select('id, nombre, precio, categoria, imagen, creado_en, tamanos_disponibles, kofi_url')
+        .order('creado_en', { ascending: false }); 
+
+    if (error) {
+        console.error("Error al cargar productos:", error.message);
+        contenedorCatalogo.innerHTML = `<p style="color: red; text-align: center; font-weight: 600; width: 100%;">Error al cargar la vitrina. Inténtalo de nuevo más tarde.</p>`;
+        return;
+    }
+
+    todosLosProductos = productos;
+    renderizarProductos(todosLosProductos); 
+}
+
+function renderizarProductos(productosMostrados) {
+    if (!contenedorCatalogo) return;
+    contenedorCatalogo.innerHTML = ''; 
+
+    if (productosMostrados.length === 0) {
+        contenedorCatalogo.innerHTML = `<p style="text-align: center; width: 100%; color: var(--color-text-muted);">No hay objetos mágicos en esta categoría aún.</p>`;
+        return;
+    }
+
+    productosMostrados.forEach(producto => {
+        const imagenDiv = producto.imagen 
+            ? `<img src="${producto.imagen}" alt="${producto.nombre}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">`
+            : `<div class="img-placeholder" style="width: 100%; padding-bottom: 100%; background: #e5e7eb; border-radius: 8px;"></div>`;
+
+        const precioFormateado = parseFloat(producto.precio).toFixed(2);
+
+        // Renderizado del selector de tamaños
+        let selectorTamañoHTML = '';
+        if (producto.tamanos_disponibles) {
+            const listaTamanos = producto.tamanos_disponibles.split(',').map(t => t.trim());
+            const opcionesHTML = listaTamanos.map(tamano => `<option value="${tamano}">${tamano}</option>`).join('');
+
+            selectorTamañoHTML = `
+                <div class="selector-tamaño-container" style="margin: 12px 0 4px 0; text-align: left;">
+                    <label for="size-${producto.id}" style="font-size: 0.85rem; color: var(--color-text-muted); display: block; margin-bottom: 4px;">Opciones disponibles:</label>
+                    <select id="size-${producto.id}" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 8px; background-color: #fff; font-family: inherit; font-size: 0.9rem; color: var(--color-text-main); cursor: pointer;">
+                        ${opcionesHTML}
+                    </select>
+                </div>
+            `;
+        }
+
+        const tarjeta = document.createElement('div');
+        tarjeta.className = 'tarjeta-producto';
+        const tieneTamanos = producto.tamanos_disponibles ? 'true' : 'false';
+
+        tarjeta.innerHTML = `
+            <div class="img-container">${imagenDiv}</div>
+            <span class="category-tag">${producto.categoria}</span>
+            <h3>${producto.nombre}</h3>
+            
+            ${selectorTamañoHTML} 
+            <p class="precio">${precioFormateado} €</p>
+            
+            <button class="btn-buy" onclick="redirigirAKofi('${producto.kofi_url}', ${producto.id}, ${tieneTamanos})">
+                Comprar en Ko-fi ➔
+            </button>
+        `;
+
+        contenedorCatalogo.appendChild(tarjeta);
+    });
+}
+
+// Configurar los eventos de clic para los botones de filtrado
+if (botonesFiltro.length > 0) {
+    botonesFiltro.forEach(boton => {
+        boton.addEventListener('click', (e) => {
+            botonesFiltro.forEach(b => b.classList.remove('active'));
+            const botonClicado = e.target;
+            botonClicado.classList.add('active');
+
+            const { categoria: categoriaSeleccionada } = botonClicado.dataset;
+
+            if (categoriaSeleccionada === 'Todos') {
+                renderizarProductos(todosLosProductos);
+            } else {
+                const productosFiltrados = todosLosProductos.filter(
+                    producto => producto.categoria === categoriaSeleccionada
+                );
+                renderizarProductos(productosFiltrados);
+            }
+        });
+    });
+}
+
+function redirigirAKofi(urlKofi, idProducto, tieneTamanos) {
+    let varianteElegida = '';
+    if (tieneTamanos) {
+        const selectTamaño = document.getElementById(`size-${idProducto}`);
+        if (selectTamaño) {
+            varianteElegida = selectTamaño.value;
+        }
+    }
+
+    if (urlKofi && urlKofi !== 'null' && urlKofi !== '') {
+        window.open(urlKofi, '_blank');
+    } else {
+        alert("Este objeto mágico se está indexando en Ko-fi. ¡Vuelve a intentarlo en unos minutos!");
+    }
+}
+
+/* =========================================================================
+   3. SECCIÓN SEGUIMIENTO DE OBJETIVOS (BARRA DE METAS)
+   ========================================================================= */
 async function cargarMetaRecaudacion() {
     try {
-        // CORRECCIÓN: Cambiado 'supabase' por 'globalDb' para usar tus credenciales activas
         const { data, error } = await globalDb
             .from('metas_club')
             .select('nombre, recaudado, objetivo')
@@ -118,11 +229,8 @@ async function cargarMetaRecaudacion() {
 
         if (data) {
             const { nombre, recaudado, objetivo } = data;
-
-            // Calcular el progreso porcentual
             const porcentaje = Math.min((recaudado / objetivo) * 100, 100).toFixed(1);
 
-            // Vinculación segura de elementos del DOM
             const domTitle = document.getElementById('goal-title');
             const domBar = document.getElementById('goal-progress-bar');
             const domText = document.getElementById('goal-progress-text');
@@ -134,7 +242,6 @@ async function cargarMetaRecaudacion() {
             if (domTarget) domTarget.textContent = `Objetivo: ${parseFloat(objetivo).toFixed(2)} €`;
             if (domText) domText.textContent = `${porcentaje}% Completado`;
             
-            // Animación CSS con retardo controlado
             setTimeout(() => {
                 if (domBar) domBar.style.width = `${porcentaje}%`;
             }, 200);
@@ -146,7 +253,11 @@ async function cargarMetaRecaudacion() {
     }
 }
 
+/* =========================================================================
+   4. INICIALIZACIÓN COMPLETA DEL DOM
+   ========================================================================= */
 document.addEventListener('DOMContentLoaded', () => {
     verificarEstadoGlobal();
+    cargarProductos();
     cargarMetaRecaudacion();
 });
