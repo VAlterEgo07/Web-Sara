@@ -297,7 +297,7 @@ async function cargarMetaRecaudacion() {
 
             if (domTitle) domTitle.textContent = nombre;
             if (domCurrent) domCurrent.textContent = `Recaudado: ${parseFloat(recaudado).toFixed(2)} €`;
-            if (domTarget) domTarget.textContent = `Objetivo: ${parseFloat(objective).toFixed(2)} €`;
+            if (domTarget) domTarget.textContent = `Objetivo: ${parseFloat(objetivo).toFixed(2)} €`;
             if (domText) domText.textContent = `${porcentaje}% Completado`;
             
             setTimeout(() => {
