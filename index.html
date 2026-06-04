@@ -35,39 +35,51 @@
         </div>
     </header>
 
-<section id="suscripciones" class="section-container bg-pastel">
-    <h2 class="section-title">Planes del Club</h2>
-    <p class="section-subtitle">Elige tu nivel de magia y obtén recompensas mensuales exclusivas</p>
+<div id="tiers-container" class="grid-tiers">
     
-    <div id="tiers-container" class="grid-tiers">
-        <!-- Tier Perlita (Deshabilitado temporalmente) -->
-        <div class="card-tier text-muted-tier" style="opacity: 0.85; position: relative;">
-            <div class="tier-badge" style="background-color: #e5e7eb; color: #6b7280;">Muy Pronto</div>
-            <h3>Tier Perlita</h3>
-            <div class="price" style="color: #9ca3af;">9.99 €<span>/mes</span></div>
-            <ul class="tier-features">
-                <li>Acceso al feed exclusivo del Club Secreto</li>
-                <li>1 Patrón en PDF nuevo cada mes</li>
-                <li>Descuento del 10% en toda la tienda</li>
-                <li>Vota en las encuestas de próximos diseños</li>
-            </ul>
-            <span class="btn-tier-buy" style="display: block; text-align: center; padding: 12px; background-color: #e5e7eb; color: #9ca3af; cursor: not-allowed; border-radius: 99px; font-weight: 600;">Suscripciones cerradas</span>
-        </div>
-
-        <!-- Tier Diamante (Deshabilitado temporalmente) -->
-        <div class="card-tier tier-premium" style="opacity: 0.85; position: relative; transform: scale(1.03);">
-            <div class="tier-badge premium" style="background-color: var(--color-pastel-pink); color: #be185d;">Muy Pronto</div>
-            <h3>Tier Diamante</h3>
-            <div class="price" style="color: #9ca3af;">24.99 €<span>/mes</span></div>
-            <ul class="tier-features">
-                <li>Todas las ventajas del Tier Perlita</li>
-                <li>Una figura amigurumi física sorpresa cada mes</li>
-                <li>Acceso anticipado a colecciones limitadas</li>
-                <li>Envío gratuito garantizado en la tienda</li>
-            </ul>
-            <span class="btn-tier-buy premium" style="display: block; text-align: center; padding: 12px; background-color: #cbd5e1; color: #64748b; cursor: not-allowed; border-radius: 99px; font-weight: 600;">Suscripciones cerradas</span>
-        </div>
+    <!-- Tier 1: Muñeca de Trapo -->
+    <div class="card-tier">
+        <div class="tier-badge" style="background-color: var(--color-pastel-blue); color: #0369a1;">Costurera Aprendiz</div>
+        <h3>Muñeca de Trapo</h3>
+        <div class="price">2.99 €<span>/mes</span></div>
+        <ul class="tier-features">
+            <li>1 Print tamaño A5 exclusivo cada mes</li>
+            <li>1 Pegatina temática coleccionable</li>
+            <li>Gastos de envío y sobre incluidos</li>
+            <li>Acceso al muro exclusivo del Club Secreto</li>
+        </ul>
+        <a href="https://ko-fi.com/darlingdolls/tiers" target="_blank" class="btn-tier-buy" style="display: block; text-align: center; padding: 12px; border-radius: 99px; text-decoration: none;">Unirse al Club</a>
     </div>
+
+    <!-- Tier 2: Muñeca de Porcelana -->
+    <div class="card-tier tier-premium">
+        <div class="tier-badge premium" style="background-color: var(--color-pastel-pink); color: #be185d;">Artesana Mágica</div>
+        <h3>Muñeca de Porcelana</h3>
+        <div class="price">4.99 €<span>/mes</span></div>
+        <ul class="tier-features">
+            <li>Todo lo del Tier 1 (Print A5 y Pegatina)</li>
+            <li>1 Cabeza Amigurumi exclusiva al mes</li>
+            <li>Envío mejorado y protegido en paquete</li>
+            <li>Descuento permanente del 10% en tienda</li>
+        </ul>
+        <a href="https://ko-fi.com/darlingdolls/tiers" target="_blank" class="btn-tier-buy premium" style="display: block; text-align: center; padding: 12px; border-radius: 99px; text-decoration: none;">Unirse al Club</a>
+    </div>
+
+    <!-- Tier 3: Muñeca de Cristal -->
+    <div class="card-tier" style="border: 2px solid #e0f2fe; position: relative;">
+        <div class="tier-badge" style="background-color: var(--color-pastel-pink-dark); color: white;">Coleccionista Suprema</div>
+        <h3>Muñeca de Cristal</h3>
+        <div class="price">6.99 €<span>/mes</span></div>
+        <ul class="tier-features">
+            <li>Todas las recompensas físicas del Tier 2</li>
+            <li>1 Carta física especial de agradecimiento</li>
+            <li>Acceso anticipado a colecciones limitadas</li>
+            <li>Mención especial en nuestros patrones y web</li>
+        </ul>
+        <a href="https://ko-fi.com/darlingdolls/tiers" target="_blank" class="btn-tier-buy" style="display: block; text-align: center; padding: 12px; border-radius: 99px; text-decoration: none; background-color: var(--color-pastel-pink-dark); color: white;">Unirse al Club</a>
+    </div>
+
+</div>
 
     <!-- --- SECCIÓN: OBJETIVO DE RECAUDACIÓN ACTIVO --- -->
     <div class="kofi-goal-section">
