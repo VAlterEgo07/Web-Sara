@@ -1,3 +1,5 @@
+let todosLosProductos = []; // Almacenamiento local de los productos descargados
+
 /* =========================================================================
    1. GESTIÓN DE AUTENTICACIÓN Y PERFILES (NAVBAR)
    ========================================================================= */
@@ -101,7 +103,6 @@ async function cargarProductos() {
     const contenedorCatalogo = document.getElementById('catalogo-completo');
     if (!contenedorCatalogo) return;
 
-    // CORRECCIÓN: Pedimos explícitamente 'imagen_url' para que coincida con tu base de datos
     const { data: productos, error } = await globalDb
         .from('productos')
         .select('id, nombre, precio, categoria, imagen_url, creado_en, tamanos_disponibles, kofi_url')
@@ -129,16 +130,23 @@ function renderizarProductos(productosMostrados) {
     }
 
     productosMostrados.forEach(producto => {
-        // CORRECCIÓN: Usamos producto.imagen_url para mostrar la foto
         const imagenDiv = producto.imagen_url 
             ? `<img src="${producto.imagen_url}" alt="${producto.nombre}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">`
             : `<div class="img-placeholder" style="width: 100%; padding-bottom: 100%; background: #e5e7eb; border-radius: 8px;"></div>`;
 
-        const precioFormateado = parseFloat(producto.precio).toFixed(2);
+        // Preparamos el precio base
+        const precioBase = parseFloat(producto.precio).toFixed(2);
+        let textoPrecio = `${precioBase} €`;
 
         let selectorTamañoHTML = '';
         if (producto.tamanos_disponibles) {
             const listaTamanos = producto.tamanos_disponibles.split(',').map(t => t.trim());
+            
+            // Si hay más de una opción disponible, añadimos "Desde " al precio
+            if (listaTamanos.length > 1) {
+                textoPrecio = `Desde ${precioBase} €`;
+            }
+
             const opcionesHTML = listaTamanos.map(tamano => `<option value="${tamano}">${tamano}</option>`).join('');
 
             selectorTamañoHTML = `
@@ -161,7 +169,7 @@ function renderizarProductos(productosMostrados) {
             <h3>${producto.nombre}</h3>
             
             ${selectorTamañoHTML} 
-            <p class="precio">${precioFormateado} €</p>
+            <p class="precio" style="font-size: 1.2rem;">${textoPrecio}</p>
             
             <button class="btn-buy" onclick="redirigirAKofi('${producto.kofi_url}', ${producto.id}, ${tieneTamanos})">
                 Comprar en Ko-fi ➔
@@ -172,66 +180,11 @@ function renderizarProductos(productosMostrados) {
     });
 }
 
-function renderizarProductos(productosMostrados) {
-    const contenedorCatalogo = document.getElementById('catalogo-completo');
-    if (!contenedorCatalogo) return;
-    contenedorCatalogo.innerHTML = ''; 
-
-    if (productosMostrados.length === 0) {
-        contenedorCatalogo.innerHTML = `<p style="text-align: center; width: 100%; color: var(--color-text-muted); margin-top: 20px;">No hay objetos mágicos en esta categoría aún.</p>`;
-        return;
-    }
-
-    productosMostrados.forEach(producto => {
-        const imagenDiv = producto.imagen 
-            ? `<img src="${producto.imagen}" alt="${producto.nombre}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">`
-            : `<div class="img-placeholder" style="width: 100%; padding-bottom: 100%; background: #e5e7eb; border-radius: 8px;"></div>`;
-
-        const precioFormateado = parseFloat(producto.precio).toFixed(2);
-
-        let selectorTamañoHTML = '';
-        if (producto.tamanos_disponibles) {
-            const listaTamanos = producto.tamanos_disponibles.split(',').map(t => t.trim());
-            const opcionesHTML = listaTamanos.map(tamano => `<option value="${tamano}">${tamano}</option>`).join('');
-
-            selectorTamañoHTML = `
-                <div class="selector-tamaño-container" style="margin: 12px 0 4px 0; text-align: left;">
-                    <label for="size-${producto.id}" style="font-size: 0.85rem; color: var(--color-text-muted); display: block; margin-bottom: 4px;">Opciones disponibles:</label>
-                    <select id="size-${producto.id}" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 8px; background-color: #fff; font-family: inherit; font-size: 0.9rem; color: var(--color-text-main); cursor: pointer;">
-                        ${opcionesHTML}
-                    </select>
-                </div>
-            `;
-        }
-
-        const tarjeta = document.createElement('div');
-        tarjeta.className = 'tarjeta-producto';
-        const tieneTamanos = producto.tamanos_disponibles ? 'true' : 'false';
-
-        tarjeta.innerHTML = `
-            <div class="img-container">${imagenDiv}</div>
-            <span class="category-tag">${producto.categoria}</span>
-            <h3>${producto.nombre}</h3>
-            
-            ${selectorTamañoHTML} 
-            <p class="precio">${precioFormateado} €</p>
-            
-            <button class="btn-buy" onclick="redirigirAKofi('${producto.kofi_url}', ${producto.id}, ${tieneTamanos})">
-                Comprar en Ko-fi ➔
-            </button>
-        `;
-
-        contenedorCatalogo.appendChild(tarjeta);
-    });
-}
-
-// Nueva función aislada para arrancar los filtros de forma segura
 function inicializarFiltros() {
     const botonesFiltro = document.querySelectorAll('.btn-filter');
     if (botonesFiltro.length === 0) return;
 
     botonesFiltro.forEach(boton => {
-        // Clonamos el nodo para limpiar cualquier listener viejo acumulado
         const nuevoBoton = boton.cloneNode(true);
         boton.parentNode.replaceChild(nuevoBoton, boton);
 
