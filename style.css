@@ -393,17 +393,18 @@ body {
 /* Para Teléfonos Móviles */
 @media (max-width: 480px) {
     .grid-productos {
-        /* Fuerza exactamente 1 columna (un objeto por fila) */
+        /* Fuerza exactamente 1 columna (un objeto por fila) solo en móviles */
         grid-template-columns: repeat(1, minmax(0, 1fr));
         gap: 20px;
     }
     
-    /* Opcional: Hace que las tarjetas ocupen un espacio visual más cómodo en móvil */
+    /* Hace que las tarjetas ocupen un espacio visual más cómodo en móvil */
     .tarjeta-producto {
         max-width: 100%;
         margin: 0 auto;
     }
 }
+
 .tarjeta-producto {
     background: var(--color-surface);
     border-radius: var(--border-radius);
@@ -746,7 +747,7 @@ footer {
    ========================================= */
 @media (max-width: 768px) {
     .nav-links {
-        display: none; /* En un proyecto real aquí iría un menú hamburguesa */
+        display: none;
     }
     
     .hero-content h1 {
@@ -790,7 +791,6 @@ footer {
     color: #ffffff;
 }
 
-/* Contenedor del menú oculto por defecto */
 .dropdown-content {
     display: none;
     position: absolute;
@@ -806,7 +806,6 @@ footer {
     text-align: left;
 }
 
-/* Clase activa manejada con JavaScript */
 .dropdown-content.show {
     display: block;
 }
@@ -826,7 +825,6 @@ footer {
     color: var(--color-pastel-pink-dark);
 }
 
-/* Línea divisoria dentro del menú */
 .dropdown-divider {
     border: 0;
     height: 1px;
@@ -834,7 +832,6 @@ footer {
     margin: 6px 0;
 }
 
-/* Estilo para el botón de salir */
 .dropdown-content a.logout-link {
     color: #ef4444;
 }
@@ -890,7 +887,6 @@ footer {
     margin-bottom: 24px;
 }
 
-/* Contenedor e indicador de la barra de progreso */
 .progress-container {
     background-color: #f3f4f6;
     border-radius: 99px;
@@ -904,7 +900,7 @@ footer {
 .progress-bar {
     background: linear-gradient(90deg, var(--color-pastel-pink) 0%, var(--color-pastel-blue) 100%);
     height: 100%;
-    width: 0%; /* El porcentaje se actualizará desde JS o manualmente */
+    width: 0%;
     border-radius: 99px;
     transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -921,7 +917,6 @@ footer {
     color: var(--color-text-main);
 }
 
-/* Metas de cantidades */
 .goal-amounts {
     display: flex;
     justify-content: space-between;
@@ -932,12 +927,11 @@ footer {
     padding: 0 4px;
 }
 
-/* Botón estilizado estilo Ko-fi integrado con la paleta */
 .btn-kofi {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background-color: #29abe2; /* Azul corporativo de Ko-fi */
+    background-color: #29abe2;
     color: #ffffff;
     text-decoration: none;
     padding: 12px 28px;
@@ -962,7 +956,6 @@ footer {
     margin-right: 10px;
 }
 
-/* Adaptación responsiva para móviles */
 @media (max-width: 480px) {
     .kofi-goal-section {
         padding: 24px 16px;
@@ -979,4 +972,3 @@ footer {
         width: 100%;
     }
 }
-
