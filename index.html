@@ -35,7 +35,7 @@
         </div>
     </header>
 
-    <section id="suscripciones" class="section-container bg-pastel">
+<section id="suscripciones" class="section-container bg-pastel">
         <h2 class="section-title">Planes del Club</h2>
         <p class="section-subtitle">Elige tu nivel de magia y obtén recompensas mensuales exclusivas</p>
         
@@ -50,7 +50,8 @@
                     <li>Descuento del 10% en toda la tienda</li>
                     <li>Vota en las encuestas de próximos diseños</li>
                 </ul>
-                <a href="auth.html" class="btn-tier-buy" style="display: block; text-align: center; text-decoration: none; padding: 12px;">Suscribirse</a>
+                <!-- Reemplazamos auth.html por tu enlace directo de membresía de Ko-fi -->
+                <a href="https://ko-fi.com/TU_USUARIO_KOFI/tiers" target="_blank" class="btn-tier-buy" style="display: block; text-align: center; text-decoration: none; padding: 12px;">Suscribirse</a>
             </div>
 
             <div class="card-tier tier-premium">
@@ -63,8 +64,33 @@
                     <li>Acceso anticipado a colecciones limitadas</li>
                     <li>Envío gratuito garantizado en la tienda</li>
                 </ul>
-                <a href="auth.html" class="btn-tier-buy premium" style="display: block; text-align: center; text-decoration: none; padding: 12px;">Suscribirse</a>
+                <!-- Reemplazamos auth.html por tu enlace directo de membresía de Ko-fi -->
+                <a href="https://ko-fi.com/TU_USUARIO_KOFI/tiers" target="_blank" class="btn-tier-buy premium" style="display: block; text-align: center; text-decoration: none; padding: 12px;">Suscribirse</a>
             </div>
+        </div>
+
+        <!-- --- NUEVA SECCIÓN: OBJETIVO DE RECAUDACIÓN Y PRÓXIMAMENTE --- -->
+        <div class="kofi-goal-section" style="max-width: 600px; margin: 50px auto 0 auto; text-align: center; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            <span class="badge-upcoming" style="background: #e0e0e0; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; color: #666; text-transform: uppercase; letter-spacing: 1px;">Próximamente</span>
+            <h3 style="margin-top: 15px; font-size: 1.5rem; color: #333;">Siguiente Meta del Club</h3>
+            <p style="color: #666; font-size: 0.95rem; margin-bottom: 20px;">Ayúdanos a alcanzar el objetivo para desbloquear nuevos materiales y directos de costura exclusivos.</p>
+            
+            <!-- Barra de progreso manual (Sincronizable con Supabase o JS) -->
+            <div class="progress-container" style="background: #f0f0f0; border-radius: 10px; height: 24px; width: 100%; position: relative; overflow: hidden; margin-bottom: 10px;">
+                <!-- Cambia el width (65%) dinámicamente según lo recaudado -->
+                <div class="progress-bar" style="background: linear-gradient(90deg, #ffb3ba, #ffdfba); height: 100%; width: 65%; border-radius: 10px; transition: width 0.5s ease-in-out;"></div>
+                <span class="progress-text" style="position: absolute; width: 100%; left: 0; top: 0; text-align: center; line-height: 24px; font-weight: bold; font-size: 0.9rem; color: #333;">65% Completado</span>
+            </div>
+            
+            <div class="goal-amounts" style="display: flex; justify-content: space-between; font-weight: bold; color: #555; margin-bottom: 25px;">
+                <span>Recaudado: 183.30 €</span>
+                <span>Objetivo: 282.00 €</span>
+            </div>
+
+            <!-- Botón flotante/Donación rápida de Ko-fi -->
+            <a href="https://ko-fi.com/TU_USUARIO_KOFI" target="_blank" style="display: inline-block; background-color: #29abe2; color: white; text-decoration: none; padding: 12px 24px; border-radius: 30px; font-weight: bold; font-size: 1rem; box-shadow: 0 4px 10px rgba(41,171,226,0.3); transition: transform 0.2s;">
+                <img src="https://ko-fi.com/img/cup-border.png" alt="Ko-fi" style="height: 16px; vertical-align: middle; margin-right: 8px;"> Apoyar el objetivo en Ko-fi
+            </a>
         </div>
     </section>
 
