@@ -104,3 +104,56 @@ async function verificarEstadoGlobal() {
 
 // Inicializar la verificación cuando todo el HTML de la página esté completamente cargado
 document.addEventListener('DOMContentLoaded', verificarEstadoGlobal);
+
+// Asegúrate de que el cliente de Supabase ya esté inicializado en tu archivo (usando tus llaves de config.js)
+// const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+async function cargarMetaRecaudacion() {
+    try {
+        // 1. Consultar la fila de la campaña en Supabase
+        const { data, error } = await supabase
+            .from('metas_club')
+            .select('nombre, recaudado, objetivo')
+            .eq('id', 1) // El ID que creamos en el script SQL
+            .single();
+
+        if (error) throw error;
+
+        if (data) {
+            const { nombre, recaudado, objetivo } = data;
+
+            // 2. Calcular el porcentaje de progreso (máximo 100%)
+            const porcentaje = Math.min((recaudado / objetivo) * 100, 100).toFixed(1);
+
+            // 3. Capturar elementos del DOM
+            const domTitle = document.getElementById('goal-title');
+            const domBar = document.getElementById('goal-progress-bar');
+            const domText = document.getElementById('goal-progress-text');
+            const domCurrent = document.getElementById('goal-current');
+            const domTarget = document.getElementById('goal-target');
+
+            // 4. Inyectar los valores reales de la base de datos
+            if(domTitle) domTitle.textContent = nombre;
+            if(domCurrent) domCurrent.textContent = `Recaudado: ${parseFloat(recaudado).toFixed(2)} €`;
+            if(domTarget) domTarget.textContent = `Objetivo: ${parseFloat(objetivo).toFixed(2)} €`;
+            
+            // Actualizar la barra con su texto de porcentaje
+            if(domText) domText.textContent = `${porcentaje}% Completado`;
+            
+            // Dar un pequeño delay para que la animación CSS se aprecie al cargar la página
+            setTimeout(() => {
+                if(domBar) domBar.style.width = `${porcentaje}%`;
+            }, 200);
+        }
+    } catch (err) {
+        console.error('Error al obtener la meta de recaudación:', err.message);
+        // Fallback elegante por si falla la conexión temporalmente
+        const domText = document.getElementById('goal-progress-text');
+        if (domText) domText.textContent = "Meta temporalmente no disponible";
+    }
+}
+
+// Ejecutar la función cuando el DOM esté completamente listo
+document.addEventListener('DOMContentLoaded', () => {
+    cargarMetaRecaudacion();
+});
