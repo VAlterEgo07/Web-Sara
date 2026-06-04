@@ -109,7 +109,7 @@ async function cargarProductos() {
     // CAMBIO CLAVE: Usamos '*' para traer todas las columnas sin importar cómo se llamen
     const { data: productos, error } = await globalDb
         .from('productos')
-        .select('*') 
+        .select('id, nombre, precio, categoria, imagen_url, creado_en, tamanos_disponibles, kofi_url')        
         .order('creado_en', { ascending: false }); 
 
     if (error) {
