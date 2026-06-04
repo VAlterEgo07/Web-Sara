@@ -97,24 +97,31 @@ async function verificarEstadoGlobal() {
 /* =========================================================================
    2. DESCARGA Y RENDERIZADO DEL CATÁLOGO DE PRODUCTOS (LA VITRINA)
    ========================================================================= */
+/* =========================================================================
+   2. DESCARGA Y RENDERIZADO DEL CATÁLOGO DE PRODUCTOS (LA VITRINA)
+   ========================================================================= */
 async function cargarProductos() {
     const contenedorCatalogo = document.getElementById('catalogo-completo');
-    if (!contenedorCatalogo) return; // Si no estamos en la tienda, salimos sin romper nada
+    if (!contenedorCatalogo) return;
 
+    console.log("🪄 Invocando objetos desde Supabase...");
+
+    // CAMBIO CLAVE: Usamos '*' para traer todas las columnas sin importar cómo se llamen
     const { data: productos, error } = await globalDb
         .from('productos')
-        .select('id, nombre, precio, categoria, imagen, creado_en, tamanos_disponibles, kofi_url')
+        .select('*') 
         .order('creado_en', { ascending: false }); 
 
     if (error) {
-        console.error("Error al cargar productos:", error.message);
-        contenedorCatalogo.innerHTML = `<p style="color: red; text-align: center; font-weight: 600; width: 100%;">Error al cargar la vitrina. Inténtalo de nuevo más tarde.</p>`;
+        console.error("🚨 Error bloqueante de Supabase:", error);
+        contenedorCatalogo.innerHTML = `<p style="color: red; text-align: center; font-weight: 600; width: 100%;">Fallo en la base de datos: ${error.message}</p>`;
         return;
     }
 
+    console.log("📦 Datos recibidos con éxito:", productos);
     todosLosProductos = productos;
     renderizarProductos(todosLosProductos); 
-    inicializarFiltros(); // Activamos los filtros dinámicamente
+    inicializarFiltros(); 
 }
 
 function renderizarProductos(productosMostrados) {
